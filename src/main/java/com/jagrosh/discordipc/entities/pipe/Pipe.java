@@ -69,7 +69,7 @@ public abstract class Pipe {
             }
 
             try {
-                File fileLocation = new File(location);
+                File fileLocation = new File(location.replace("\\", "\\\\"));
                 if (fileLocation.exists()) {
                     if (ipcClient.isDebugMode()) {
                         ipcClient.getCurrentLogger(LOGGER).info(String.format("[DEBUG] Found valid file, attempting connection to IPC: \"%s\"", location));
