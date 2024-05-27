@@ -76,51 +76,49 @@ public abstract class Pipe {
                     }
                     pipe = createPipe(ipcClient, callbacks, fileLocation);
 
-                    if (pipe != null) {
-                        JsonObject finalObject = new JsonObject();
+                    JsonObject finalObject = new JsonObject();
 
-                        finalObject.addProperty("v", VERSION);
-                        finalObject.addProperty("client_id", Long.toString(clientId));
+                    finalObject.addProperty("v", VERSION);
+                    finalObject.addProperty("client_id", Long.toString(clientId));
 
-                        pipe.send(Packet.OpCode.HANDSHAKE, finalObject);
+                    pipe.send(Packet.OpCode.HANDSHAKE, finalObject);
 
-                        Packet p = pipe.read(); // this is a valid client at this point
+                    Packet p = pipe.read(); // this is a valid client at this point
 
-                        final JsonObject parsedData = p.getJson();
-                        final JsonObject data = parsedData.getAsJsonObject("data");
-                        final JsonObject userData = data.getAsJsonObject("user");
+                    final JsonObject parsedData = p.getJson();
+                    final JsonObject data = parsedData.getAsJsonObject("data");
+                    final JsonObject userData = data.getAsJsonObject("user");
 
-                        pipe.build = DiscordBuild.from(data
-                                .getAsJsonObject("config")
-                                .get("api_endpoint").getAsString());
+                    pipe.build = DiscordBuild.from(data
+                            .getAsJsonObject("config")
+                            .get("api_endpoint").getAsString());
 
-                        pipe.currentUser = new User(
-                                userData.getAsJsonPrimitive("username").getAsString(),
-                                userData.has("global_name") && userData.get("global_name").isJsonPrimitive() ? userData.getAsJsonPrimitive("global_name").getAsString() : null,
-                                userData.has("discriminator") && userData.get("discriminator").isJsonPrimitive() ? userData.getAsJsonPrimitive("discriminator").getAsString() : "0",
-                                Long.parseLong(userData.getAsJsonPrimitive("id").getAsString()),
-                                userData.has("avatar") && userData.get("avatar").isJsonPrimitive() ? userData.getAsJsonPrimitive("avatar").getAsString() : null
-                        );
+                    pipe.currentUser = new User(
+                            userData.getAsJsonPrimitive("username").getAsString(),
+                            userData.has("global_name") && userData.get("global_name").isJsonPrimitive() ? userData.getAsJsonPrimitive("global_name").getAsString() : null,
+                            userData.has("discriminator") && userData.get("discriminator").isJsonPrimitive() ? userData.getAsJsonPrimitive("discriminator").getAsString() : "0",
+                            Long.parseLong(userData.getAsJsonPrimitive("id").getAsString()),
+                            userData.has("avatar") && userData.get("avatar").isJsonPrimitive() ? userData.getAsJsonPrimitive("avatar").getAsString() : null
+                    );
 
-                        if (ipcClient.isDebugMode()) {
-                            ipcClient.getCurrentLogger(LOGGER).info(String.format("[DEBUG] Found a valid client (%s) with packet: %s", pipe.build.name(), p));
-                            ipcClient.getCurrentLogger(LOGGER).info(String.format("[DEBUG] Found a valid user (%s) with id: %s", pipe.currentUser.getName(), pipe.currentUser.getId()));
-                        }
-
-                        // we're done if we found our first choice
-                        if (pipe.build == preferredOrder[0] || DiscordBuild.ANY == preferredOrder[0]) {
-                            if (ipcClient.isDebugMode()) {
-                                ipcClient.getCurrentLogger(LOGGER).info(String.format("[DEBUG] Found preferred client: %s", pipe.build.name()));
-                            }
-                            break;
-                        }
-
-                        open[pipe.build.ordinal()] = pipe; // didn't find first choice yet, so store what we have
-                        open[DiscordBuild.ANY.ordinal()] = pipe; // also store in 'any' for use later
-
-                        pipe.build = null;
-                        pipe = null;
+                    if (ipcClient.isDebugMode()) {
+                        ipcClient.getCurrentLogger(LOGGER).info(String.format("[DEBUG] Found a valid client (%s) with packet: %s", pipe.build.name(), p));
+                        ipcClient.getCurrentLogger(LOGGER).info(String.format("[DEBUG] Found a valid user (%s) with id: %s", pipe.currentUser.getName(), pipe.currentUser.getId()));
                     }
+
+                    // we're done if we found our first choice
+                    if (pipe.build == preferredOrder[0] || DiscordBuild.ANY == preferredOrder[0]) {
+                        if (ipcClient.isDebugMode()) {
+                            ipcClient.getCurrentLogger(LOGGER).info(String.format("[DEBUG] Found preferred client: %s", pipe.build.name()));
+                        }
+                        break;
+                    }
+
+                    open[pipe.build.ordinal()] = pipe; // didn't find first choice yet, so store what we have
+                    open[DiscordBuild.ANY.ordinal()] = pipe; // also store in 'any' for use later
+
+                    pipe.build = null;
+                    pipe = null;
                 } else {
                     if (ipcClient.isDebugMode()) {
                         ipcClient.getCurrentLogger(LOGGER).info(String.format("[DEBUG] Unable to locate IPC Pipe: \"%s\"", location));
