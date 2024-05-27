@@ -359,14 +359,18 @@ public final class IPCClient implements Closeable {
      * @throws IllegalStateException    There is an open connection on this IPCClient.
      * @throws NoDiscordClientException No client of the provided {@link DiscordBuild build type}(s) was found.
      */
-    public void connect(DiscordBuild... preferredOrder) throws NoDiscordClientException, InterruptedException {
+    @SuppressWarnings("BusyWait")
+    public void connect(DiscordBuild... preferredOrder) throws NoDiscordClientException {
         checkConnected(false);
         long timeToConnect;
         while ((timeToConnect = nextDelay - System.currentTimeMillis()) > 0) {
             if (debugMode) {
                 getCurrentLogger(LOGGER).info("[DEBUG] Attempting connection in: " + timeToConnect + "ms");
             }
-            Thread.sleep(timeToConnect);
+            try {
+                Thread.sleep(timeToConnect);
+            } catch (InterruptedException ignored) {
+            }
         }
         callbacks.clear();
         pipe = null;
