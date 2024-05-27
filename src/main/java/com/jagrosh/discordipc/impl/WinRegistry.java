@@ -79,7 +79,7 @@ public class WinRegistry {
                     "WindowsRegDeleteKey", (javaSpec >= 11 ? long.class : int.class),
                     byte[].class);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unable to setup registry data", e);
         }
     }
 

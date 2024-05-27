@@ -390,7 +390,7 @@ public final class IPCClient implements Closeable {
                     this.registerApp(getApplicationId(), null);
             } catch (Throwable ex) {
                 if (debugMode) {
-                    ex.printStackTrace();
+                    getCurrentLogger(LOGGER).error("Unable to register application", ex);
                 } else {
                     getCurrentLogger(LOGGER).error("Unable to register application, enable debug mode for trace...");
                 }

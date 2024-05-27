@@ -43,7 +43,7 @@ public class WindowsPipe extends Pipe {
         try {
             this.file = new RandomAccessFile(location, "rw");
         } catch (FileNotFoundException e) {
-            this.file = null;
+            throw new RuntimeException("Unable to access '" + location + "', check file permissions", e);
         }
     }
 

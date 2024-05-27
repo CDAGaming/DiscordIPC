@@ -192,7 +192,7 @@ public abstract class Pipe {
             try {
                 return osName.contains("mac") ? new MacPipe(ipcClient, callbacks, location) : new UnixPipe(ipcClient, callbacks, location);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Unable to create MacOS/Unix Pipe", e);
             }
         } else {
             throw new RuntimeException("Unsupported OS: " + osName);
