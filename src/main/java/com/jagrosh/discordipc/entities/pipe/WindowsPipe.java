@@ -135,7 +135,7 @@ public class WindowsPipe extends Pipe {
                 WinRegistry.createKey(targetKey, commandKeyName);
                 WinRegistry.writeStringValue(targetKey, commandKeyName, "", openCommand);
             }
-        } catch (Exception | Error ex) {
+        } catch (Throwable ex) {
             throw new RuntimeException("Unable to modify Discord registry keys", ex);
         }
     }

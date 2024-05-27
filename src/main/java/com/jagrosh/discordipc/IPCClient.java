@@ -384,7 +384,7 @@ public final class IPCClient implements Closeable {
                     this.registerSteamGame(getApplicationId(), optionalSteamId);
                 else
                     this.registerApp(getApplicationId(), null);
-            } catch (Exception | Error ex) {
+            } catch (Throwable ex) {
                 if (debugMode) {
                     ex.printStackTrace();
                 } else {
