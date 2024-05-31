@@ -30,6 +30,7 @@ import java.util.Objects;
  * @author John Grosh (john.a.grosh@gmail.com)
  */
 public class RichPresence {
+    private static final int MIN_ALLOWED_BUTTONS = 1;
     private static final int MAX_ALLOWED_BUTTONS = 2;
     private final String state;
     private final String details;
@@ -162,7 +163,7 @@ public class RichPresence {
         if (secrets.has("join") || secrets.has("spectate") || secrets.has("match")) {
             finalObject.add("secrets", secrets);
         }
-        if (buttons != null && !buttons.isJsonNull() && !buttons.isEmpty() && buttons.size() <= MAX_ALLOWED_BUTTONS) {
+        if (buttons != null && !buttons.isJsonNull() && buttons.size() >= MIN_ALLOWED_BUTTONS && buttons.size() <= MAX_ALLOWED_BUTTONS) {
             finalObject.add("buttons", buttons);
         }
         finalObject.addProperty("instance", instance);
