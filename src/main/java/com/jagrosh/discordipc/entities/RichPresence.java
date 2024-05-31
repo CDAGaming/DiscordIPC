@@ -20,6 +20,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.util.Objects;
+
 /**
  * An encapsulation of all data needed to properly construct a JSON RichPresence payload.
  *
@@ -173,6 +175,45 @@ public class RichPresence {
         } catch (Exception ex) {
             return toJson().toString();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof RichPresence))
+            return false;
+        RichPresence oPresence = (RichPresence) o;
+        return this == oPresence || (
+                Objects.equals(state, oPresence.state) &&
+                        Objects.equals(details, oPresence.details) &&
+                        Objects.equals(startTimestamp, oPresence.startTimestamp) &&
+                        Objects.equals(endTimestamp, oPresence.endTimestamp) &&
+                        Objects.equals(largeImageKey, oPresence.largeImageKey) &&
+                        Objects.equals(largeImageText, oPresence.largeImageText) &&
+                        Objects.equals(smallImageKey, oPresence.smallImageKey) &&
+                        Objects.equals(smallImageText, oPresence.smallImageText) &&
+                        Objects.equals(partyId, oPresence.partyId) &&
+                        Objects.equals(partySize, oPresence.partySize) &&
+                        Objects.equals(partyMax, oPresence.partyMax) &&
+                        Objects.equals(partyPrivacy, oPresence.partyPrivacy) &&
+                        Objects.equals(matchSecret, oPresence.matchSecret) &&
+                        Objects.equals(joinSecret, oPresence.joinSecret) &&
+                        Objects.equals(spectateSecret, oPresence.spectateSecret) &&
+                        Objects.equals(buttons, oPresence.buttons) &&
+                        Objects.equals(instance, oPresence.instance)
+        );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                state, details,
+                startTimestamp, endTimestamp,
+                largeImageKey, largeImageText,
+                smallImageKey, smallImageText,
+                partyId, partySize, partyMax, partyPrivacy,
+                matchSecret, joinSecret, spectateSecret,
+                buttons, instance
+        );
     }
 
     /**
