@@ -17,7 +17,8 @@
 package com.jagrosh.discordipc.entities;
 
 import com.jagrosh.discordipc.IPCClient;
-import com.jagrosh.discordipc.impl.DataConsumer;
+
+import java.util.function.Consumer;
 
 /**
  * A callback for asynchronous logic when dealing processes that
@@ -28,8 +29,8 @@ import com.jagrosh.discordipc.impl.DataConsumer;
  * @author John Grosh (john.a.grosh@gmail.com)
  */
 public class Callback {
-    private final DataConsumer<Packet> success;
-    private final DataConsumer<String> failure;
+    private final Consumer<Packet> success;
+    private final Consumer<String> failure;
 
     /**
      * Constructs an empty Callback.
@@ -39,33 +40,33 @@ public class Callback {
     }
 
     /**
-     * Constructs a Callback with a success {@link DataConsumer} that
+     * Constructs a Callback with a success {@link Consumer} that
      * occurs when the process it is attached to executes without
      * error.
      *
      * @param success The Consumer to launch after a successful process.
      */
-    public Callback(DataConsumer<Packet> success) {
+    public Callback(Consumer<Packet> success) {
         this(success, null);
     }
 
     /**
-     * Constructs a Callback with a success {@link DataConsumer} <i>and</i>
-     * a failure {@link DataConsumer} that occurs when the process it is
+     * Constructs a Callback with a success {@link Consumer} <i>and</i>
+     * a failure {@link Consumer} that occurs when the process it is
      * attached to executes without or with error (respectively).
      *
      * @param success The Consumer to launch after a successful process.
      * @param failure The Consumer to launch if the process has an error.
      */
-    public Callback(DataConsumer<Packet> success, DataConsumer<String> failure) {
+    public Callback(Consumer<Packet> success, Consumer<String> failure) {
         this.success = success;
         this.failure = failure;
     }
 
     /**
-     * Gets whether or not this Callback is "empty" which is more precisely
-     * defined as not having a specified success {@link DataConsumer} and/or a
-     * failure {@link DataConsumer}.<br>
+     * Gets whether this Callback is "empty" which is more precisely
+     * defined as not having a specified success {@link Consumer} and/or a
+     * failure {@link Consumer}.<br>
      * This is only true if the Callback is constructed with the parameter-less
      * constructor ({@link #Callback()}) or another constructor that leaves
      * one or both parameters {@code null}.
@@ -77,7 +78,7 @@ public class Callback {
     }
 
     /**
-     * Launches the success {@link DataConsumer}.
+     * Launches the success {@link Consumer}.
      *
      * @param packet The packet to execute after success
      */
@@ -87,7 +88,7 @@ public class Callback {
     }
 
     /**
-     * Launches the failure {@link DataConsumer} with the
+     * Launches the failure {@link Consumer} with the
      * provided message.
      *
      * @param message The message to launch the failure consumer with.
