@@ -445,7 +445,7 @@ public final class IPCClient implements Closeable {
         checkConnected(true);
 
         if (debugMode) {
-            getCurrentLogger(LOGGER).info("[DEBUG] Sending RichPresence to discord: " + (presence == null ? null : presence.toDecodedJson(encoding)));
+            getCurrentLogger(LOGGER).info("[DEBUG] Sending RichPresence to discord: " + presence.toDecodedJson(encoding));
         }
 
         // Setup and Send JsonObject Data Representing an RPC Update
@@ -455,7 +455,7 @@ public final class IPCClient implements Closeable {
         finalObject.addProperty("cmd", "SET_ACTIVITY");
 
         args.addProperty("pid", getPID());
-        args.add("activity", presence == null ? new JsonObject() : presence.toJson());
+        args.add("activity", presence.toJson());
 
         finalObject.add("args", args);
         pipe.send(OpCode.FRAME, finalObject, callback);
