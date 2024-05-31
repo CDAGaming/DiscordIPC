@@ -282,6 +282,7 @@ public abstract class Pipe {
      * @param data The data to parse with.
      * @return the resulting {@link Packet}
      */
+    @SuppressWarnings("deprecation")
     public Packet receive(Packet.OpCode op, byte[] data) {
         JsonObject packetData = new JsonParser().parse(new String(data)).getAsJsonObject();
         Packet p = new Packet(op, packetData, ipcClient.getEncoding());

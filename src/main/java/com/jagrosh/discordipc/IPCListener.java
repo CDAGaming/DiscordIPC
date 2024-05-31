@@ -64,14 +64,14 @@ public interface IPCListener {
 
     /**
      * Fired whenever a RichPresence activity informs us that
-     * a user has clicked a "ask to join" button.
+     * a user has clicked an "ask to join" button.
      * <p>
      * As opposed to {@link #onActivityJoin(IPCClient, String)},
      * this also provides packaged {@link User} data.
      *
      * @param client The IPCClient receiving the event.
      * @param secret The secret of the event, determined by the implementation and specified by the user.
-     * @param user   The user who clicked the clicked the event, containing data on the account.
+     * @param user   The user who clicked the event, containing data on the account.
      */
     void onActivityJoinRequest(IPCClient client, String secret, User user);
 

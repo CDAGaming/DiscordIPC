@@ -70,7 +70,7 @@ public enum PipeStatus {
      * Status for when the Pipe has unexpectedly disconnected, either because
      * of an exception, and/or due to bad data.
      * <p>
-     * When the status of an Pipe becomes this, a call to
+     * When the status of a Pipe becomes this, a call to
      * {@link IPCListener#onDisconnect(IPCClient, Throwable)} will be made if one
      * has been provided to the IPCClient.
      * <p>

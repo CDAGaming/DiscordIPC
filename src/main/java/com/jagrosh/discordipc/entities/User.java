@@ -20,7 +20,7 @@ import com.jagrosh.discordipc.IPCClient;
 import com.jagrosh.discordipc.IPCListener;
 
 /**
- * A encapsulation of a Discord User's data provided when a
+ * An encapsulation of a Discord User's data provided when a
  * {@link IPCListener IPCListener} fires
  * {@link IPCListener#onActivityJoinRequest(IPCClient, String, User)
  * onActivityJoinRequest}.
@@ -155,7 +155,7 @@ public class User {
     }
 
     /**
-     * Gets whether or not this User is a bot.
+     * Gets whether this User is a bot.
      * <p>
      * While, at the time of writing this documentation, bots cannot
      * use Rich Presence features, there may be a time in the future

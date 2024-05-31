@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
 
+@SuppressWarnings("NegativeIntConstantInLongContext")
 public class WinRegistry {
     public static final int HKEY_CURRENT_USER = 0x80000001;
     public static final int HKEY_LOCAL_MACHINE = 0x80000002;

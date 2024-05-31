@@ -1,14 +1,13 @@
 package com.jagrosh.discordipc.impl;
 
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class Backoff {
     private final long minAmount;
     private final long maxAmount;
+    private final Random randGenerator;
     private long current;
     private int fails;
-    private final Random randGenerator;
 
     public Backoff(long min, long max) {
         this.minAmount = min;

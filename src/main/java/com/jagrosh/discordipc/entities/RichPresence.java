@@ -30,6 +30,7 @@ import java.util.Objects;
  * @author John Grosh (john.a.grosh@gmail.com)
  */
 public class RichPresence {
+    private static final int MAX_ALLOWED_BUTTONS = 2;
     private final String state;
     private final String details;
     private final long startTimestamp;
@@ -75,7 +76,7 @@ public class RichPresence {
      * Constructs a {@link JsonObject} representing a payload to send to discord
      * to update a user's Rich Presence.
      *
-     * <p>This is purely internal, and should not ever need to be called outside of
+     * <p>This is purely internal, and should not ever need to be called outside
      * the library.
      *
      * @return A JSONObject payload for updating a user's Rich Presence.
@@ -161,7 +162,7 @@ public class RichPresence {
         if (secrets.has("join") || secrets.has("spectate") || secrets.has("match")) {
             finalObject.add("secrets", secrets);
         }
-        if (buttons != null && !buttons.isJsonNull() && buttons.size() > 0 && buttons.size() < 3) {
+        if (buttons != null && !buttons.isJsonNull() && !buttons.isEmpty() && buttons.size() <= MAX_ALLOWED_BUTTONS) {
             finalObject.add("buttons", buttons);
         }
         finalObject.addProperty("instance", instance);
@@ -427,7 +428,7 @@ public class RichPresence {
          * Marks the {@link #setMatchSecret(String) matchSecret} as a game
          * session with a specific beginning and end.
          *
-         * @param instance Whether or not the {@code matchSecret} is a game
+         * @param instance Whether the {@code matchSecret} is a game
          *                 with a specific beginning and end.
          * @return This Builder.
          */

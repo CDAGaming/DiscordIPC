@@ -656,12 +656,7 @@ public final class IPCClient implements Closeable {
     private void startReading() {
         final IPCClient localInstance = this;
 
-        readThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                IPCClient.this.readPipe(localInstance);
-            }
-        }, "IPCClient-Reader");
+        readThread = new Thread(() -> IPCClient.this.readPipe(localInstance), "IPCClient-Reader");
         readThread.setDaemon(true);
 
         if (debugMode) {
