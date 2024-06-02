@@ -132,7 +132,13 @@ public class User {
      * @return The Users {@link DefaultAvatar} avatar ID.
      */
     public String getDefaultAvatarId() {
-        return DefaultAvatar.values()[(getDiscriminator().equals("0") ? (int) getIdLong() >> 22 : Integer.parseInt(getDiscriminator())) % DefaultAvatar.values().length].toString();
+        int index;
+        if (getDiscriminator().equals("0")) {
+            index = ((int) getIdLong() >> 22) % 6;
+        } else {
+            index = Integer.parseInt(getDiscriminator()) % 5;
+        }
+        return DefaultAvatar.values()[index].toString();
     }
 
     /**
@@ -205,7 +211,8 @@ public class User {
         GREY("322c936a8c8be1b803cd94861bdfa868"),
         GREEN("dd4dbc0016779df1378e7812eabaa04d"),
         ORANGE("0e291f67c9274a1abdddeb3fd919cbaa"),
-        RED("1cbd08c76f8af6dddce02c5138971129");
+        RED("1cbd08c76f8af6dddce02c5138971129"),
+        PINK("1b3106e166c99cc64682");
 
         private final String text;
 
