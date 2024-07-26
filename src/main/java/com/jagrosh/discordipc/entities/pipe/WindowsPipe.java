@@ -111,7 +111,7 @@ public class WindowsPipe extends Pipe {
         String protocolDescription = "URL:Run game " + applicationId + " protocol";
         String keyName = "Software\\Classes\\" + protocolName;
         String iconKeyName = keyName + "\\DefaultIcon";
-        String commandKeyName = keyName + "\\DefaultIcon";
+        String commandKeyName = keyName + "\\shell\\open\\command";
 
         try {
             if (javaSpec >= 11) {
