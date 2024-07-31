@@ -1,0 +1,51 @@
+name: Build Release
+on:
+  release:
+    types: [ created ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Import GPG Key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.MAVEN_TOKEN }}
+
+      - name: update cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set up Build JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+
+      - name: Set up Gradle JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Publish
+        run: ./gradlew publishAggregationToCentralPortal -Pmvn.user=${{ secrets.MAVEN_USER }} -Pmvn.key=${{ secrets.MAVEN_KEY }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DiscordIPC Artifacts
+          path: ./build/libs/
+
+      - name: stop daemon
+        run: ./gradlew --stop
