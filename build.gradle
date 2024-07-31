@@ -1,0 +1,113 @@
+plugins {
+    id 'java'
+    id 'signing'
+    id 'maven-publish'
+    id 'com.gradleup.nmcp' version '1.0.3'
+    id 'com.gradleup.nmcp.aggregation' version '1.0.3'
+}
+
+version = '0.11.0' + (project.hasProperty("version_snapshot") ? "-SNAPSHOT" : "")
+group = 'io.github.cdagaming'
+description = 'Connect locally to the Discord client using IPC for a subset of RPC features like Rich Presence and Activity Join/Spectate'
+base.archivesName = 'DiscordIPC'
+
+JavaVersion targetVersion = JavaVersion.VERSION_1_8
+int targetVersionInt = Integer.parseInt(targetVersion.majorVersion)
+
+[java].each {
+    it.toolchain {
+        languageVersion.set(JavaLanguageVersion.of(targetVersionInt))
+    }
+    it.withSourcesJar()
+    it.withJavadocJar()
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.13.2'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.17'
+    implementation group: 'com.kohlschutter.junixsocket', name: 'junixsocket-common', version: '2.10.1'
+    implementation group: 'com.kohlschutter.junixsocket', name: 'junixsocket-native-common', version: '2.10.1'
+    implementation group: 'net.lenni0451', name: 'Reflect', version: '1.5.0'
+
+    nmcpAggregation(project(path))
+}
+
+jar.manifest.mainAttributes([
+        'Implementation-Title'  : project.name,
+        'Implementation-Version': project.version
+])
+
+[compileJava].each {
+    it.options.encoding = 'UTF-8'
+    it.options.deprecation = true
+    it.options.fork = true
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            pom {
+                name = rootProject.name
+                artifactId = rootProject.name
+                packaging = 'jar'
+                description = project.description
+                url = 'https://github.com/CDAGaming/DiscordIPC'
+
+                scm {
+                    connection = 'scm:git:git://github.com/CDAGaming/DiscordIPC.git'
+                    developerConnection = 'scm:git:ssh://github.com/CDAGaming/DiscordIPC.git'
+                    url = 'https://github.com/CDAGaming/DiscordIPC'
+                }
+                licenses {
+                    license {
+                        name = 'Apache License 2.0'
+                        url = 'https://github.com/CDAGaming/DiscordIPC/blob/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'cdagaming'
+                        name = 'CDAGaming'
+                        email = 'cstack2011@yahoo.com'
+                    }
+                    developer {
+                        id = 'jagrosh'
+                        name = 'John Grosh'
+                        email = 'j@gro.sh'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username = project.findProperty("mvn.user") ?: System.getenv("OSSRH_USERNAME")
+                password = project.findProperty("mvn.key") ?: System.getenv("OSSRH_PASSWORD")
+            }
+
+            def releasesRepoUrl = ""
+            def snapshotsRepoUrl = "https://central.sonatype.com/repository/maven-snapshots/"
+            url = version.endsWith('-SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+        }
+    }
+}
+
+nmcpAggregation {
+    centralPortal {
+        username = project.findProperty("mvn.user") ?: System.getenv("OSSRH_USERNAME")
+        password = project.findProperty("mvn.key") ?: System.getenv("OSSRH_PASSWORD")
+        publishingType = "USER_MANAGED"
+    }
+}
+
+signing {
+    useGpgCmd()
+    sign publishing.publications.mavenJava
+}
