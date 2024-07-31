@@ -32,6 +32,7 @@ import java.util.Objects;
 public class RichPresence {
     private static final int MIN_ALLOWED_BUTTONS = 1;
     private static final int MAX_ALLOWED_BUTTONS = 2;
+    private final ActivityType activityType;
     private final String state;
     private final String details;
     private final long startTimestamp;
@@ -50,10 +51,11 @@ public class RichPresence {
     private final JsonArray buttons;
     private final boolean instance;
 
-    public RichPresence(String state, String details, long startTimestamp, long endTimestamp,
+    public RichPresence(ActivityType activityType, String state, String details, long startTimestamp, long endTimestamp,
                         String largeImageKey, String largeImageText, String smallImageKey, String smallImageText,
                         String partyId, int partySize, int partyMax, PartyPrivacy partyPrivacy, String matchSecret, String joinSecret,
                         String spectateSecret, JsonArray buttons, boolean instance) {
+        this.activityType = activityType;
         this.state = state;
         this.details = details;
         this.startTimestamp = startTimestamp;
@@ -142,6 +144,8 @@ public class RichPresence {
             secrets.addProperty("match", matchSecret);
         }
 
+        finalObject.addProperty("type", activityType.ordinal());
+
         if (state != null && !state.isEmpty()) {
             finalObject.addProperty("state", state);
         }
@@ -182,7 +186,8 @@ public class RichPresence {
             return false;
         RichPresence oPresence = (RichPresence) o;
         return this == oPresence || (
-                Objects.equals(state, oPresence.state) &&
+                Objects.equals(activityType, oPresence.activityType) &&
+                        Objects.equals(state, oPresence.state) &&
                         Objects.equals(details, oPresence.details) &&
                         Objects.equals(startTimestamp, oPresence.startTimestamp) &&
                         Objects.equals(endTimestamp, oPresence.endTimestamp) &&
@@ -205,6 +210,7 @@ public class RichPresence {
     @Override
     public int hashCode() {
         return Objects.hash(
+                activityType,
                 state, details,
                 startTimestamp, endTimestamp,
                 largeImageKey, largeImageText,
@@ -222,6 +228,7 @@ public class RichPresence {
      * <a href="https://discord.com/developers/docs/rich-presence/how-to#updating-presence-update-presence-payload-fields">here</a>
      */
     public static class Builder {
+        private ActivityType activityType;
         private String state;
         private String details;
         private long startTimestamp;
@@ -246,10 +253,21 @@ public class RichPresence {
          * @return The RichPresence built.
          */
         public RichPresence build() {
-            return new RichPresence(state, details, startTimestamp, endTimestamp,
+            return new RichPresence(activityType, state, details, startTimestamp, endTimestamp,
                     largeImageKey, largeImageText, smallImageKey, smallImageText,
                     partyId, partySize, partyMax, partyPrivacy, matchSecret, joinSecret,
                     spectateSecret, buttons, instance);
+        }
+
+        /**
+         * Sets the activity type for the player's current activity
+         *
+         * @param activityType The new activity type
+         * @return This Builder.
+         */
+        public Builder setActivityType(ActivityType activityType) {
+            this.activityType = activityType;
+            return this;
         }
 
         /**
