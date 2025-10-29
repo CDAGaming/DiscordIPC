@@ -33,14 +33,20 @@ public class RichPresence {
     private static final int MIN_ALLOWED_BUTTONS = 1;
     private static final int MAX_ALLOWED_BUTTONS = 2;
     private final ActivityType activityType;
+    private final StatusDisplayType statusDisplayType;
     private final String state;
+    private final String stateUrl;
     private final String details;
+    private final String detailsUrl;
+    private final String name;
     private final long startTimestamp;
     private final long endTimestamp;
     private final String largeImageKey;
     private final String largeImageText;
+    private final String largeImageUrl;
     private final String smallImageKey;
     private final String smallImageText;
+    private final String smallImageUrl;
     private final String partyId;
     private final int partySize;
     private final int partyMax;
@@ -51,19 +57,30 @@ public class RichPresence {
     private final JsonArray buttons;
     private final boolean instance;
 
-    public RichPresence(ActivityType activityType, String state, String details, long startTimestamp, long endTimestamp,
-                        String largeImageKey, String largeImageText, String smallImageKey, String smallImageText,
-                        String partyId, int partySize, int partyMax, PartyPrivacy partyPrivacy, String matchSecret, String joinSecret,
-                        String spectateSecret, JsonArray buttons, boolean instance) {
+    public RichPresence(ActivityType activityType, StatusDisplayType statusDisplayType,
+                        String state, String stateUrl,
+                        String details, String detailsUrl,
+                        String name, long startTimestamp, long endTimestamp,
+                        String largeImageKey, String largeImageText, String largeImageUrl,
+                        String smallImageKey, String smallImageText, String smallImageUrl,
+                        String partyId, int partySize, int partyMax, PartyPrivacy partyPrivacy,
+                        String matchSecret, String joinSecret, String spectateSecret,
+                        JsonArray buttons, boolean instance) {
         this.activityType = activityType;
+        this.statusDisplayType = statusDisplayType;
         this.state = state;
+        this.stateUrl = stateUrl;
         this.details = details;
+        this.detailsUrl = detailsUrl;
+        this.name = name;
         this.startTimestamp = startTimestamp;
         this.endTimestamp = endTimestamp;
         this.largeImageKey = largeImageKey;
         this.largeImageText = largeImageText;
+        this.largeImageUrl = largeImageUrl;
         this.smallImageKey = smallImageKey;
         this.smallImageText = smallImageText;
+        this.smallImageUrl = smallImageUrl;
         this.partyId = partyId;
         this.partySize = partySize;
         this.partyMax = partyMax;
@@ -105,6 +122,9 @@ public class RichPresence {
             if (largeImageText != null && !largeImageText.isEmpty()) {
                 assets.addProperty("large_text", largeImageText);
             }
+            if (largeImageUrl != null && !largeImageUrl.isEmpty()) {
+                assets.addProperty("large_url", largeImageUrl);
+            }
         }
 
         if (smallImageKey != null && !smallImageKey.isEmpty()) {
@@ -112,6 +132,9 @@ public class RichPresence {
 
             if (smallImageText != null && !smallImageText.isEmpty()) {
                 assets.addProperty("small_text", smallImageText);
+            }
+            if (smallImageUrl != null && !smallImageUrl.isEmpty()) {
+                assets.addProperty("small_url", smallImageUrl);
             }
         }
 
@@ -145,13 +168,27 @@ public class RichPresence {
         }
 
         finalObject.addProperty("type", activityType.ordinal());
+        finalObject.addProperty("status_display_type", statusDisplayType.ordinal());
 
         if (state != null && !state.isEmpty()) {
             finalObject.addProperty("state", state);
+
+            if (stateUrl != null && !stateUrl.isEmpty()) {
+                finalObject.addProperty("state_url", stateUrl);
+            }
         }
         if (details != null && !details.isEmpty()) {
             finalObject.addProperty("details", details);
+
+            if (detailsUrl != null && !detailsUrl.isEmpty()) {
+                finalObject.addProperty("details_url", detailsUrl);
+            }
         }
+
+        if (name != null && !name.isEmpty()) {
+            finalObject.addProperty("name", name);
+        }
+
         if (timestamps.has("start")) {
             finalObject.add("timestamps", timestamps);
         }
@@ -187,14 +224,20 @@ public class RichPresence {
         RichPresence oPresence = (RichPresence) o;
         return this == oPresence || (
                 Objects.equals(activityType, oPresence.activityType) &&
+                        Objects.equals(statusDisplayType, oPresence.statusDisplayType) &&
                         Objects.equals(state, oPresence.state) &&
+                        Objects.equals(stateUrl, oPresence.stateUrl) &&
                         Objects.equals(details, oPresence.details) &&
+                        Objects.equals(detailsUrl, oPresence.detailsUrl) &&
+                        Objects.equals(name, oPresence.name) &&
                         Objects.equals(startTimestamp, oPresence.startTimestamp) &&
                         Objects.equals(endTimestamp, oPresence.endTimestamp) &&
                         Objects.equals(largeImageKey, oPresence.largeImageKey) &&
                         Objects.equals(largeImageText, oPresence.largeImageText) &&
+                        Objects.equals(largeImageUrl, oPresence.largeImageUrl) &&
                         Objects.equals(smallImageKey, oPresence.smallImageKey) &&
                         Objects.equals(smallImageText, oPresence.smallImageText) &&
+                        Objects.equals(smallImageUrl, oPresence.smallImageUrl) &&
                         Objects.equals(partyId, oPresence.partyId) &&
                         Objects.equals(partySize, oPresence.partySize) &&
                         Objects.equals(partyMax, oPresence.partyMax) &&
@@ -210,11 +253,12 @@ public class RichPresence {
     @Override
     public int hashCode() {
         return Objects.hash(
-                activityType,
-                state, details,
-                startTimestamp, endTimestamp,
-                largeImageKey, largeImageText,
-                smallImageKey, smallImageText,
+                activityType, statusDisplayType,
+                state, stateUrl,
+                details, detailsUrl,
+                name, startTimestamp, endTimestamp,
+                largeImageKey, largeImageText, largeImageUrl,
+                smallImageKey, smallImageText, smallImageUrl,
                 partyId, partySize, partyMax, partyPrivacy,
                 matchSecret, joinSecret, spectateSecret,
                 buttons, instance
@@ -229,14 +273,20 @@ public class RichPresence {
      */
     public static class Builder {
         private ActivityType activityType;
+        private StatusDisplayType statusDisplayType;
         private String state;
+        private String stateUrl;
         private String details;
+        private String detailsUrl;
+        private String name;
         private long startTimestamp;
         private long endTimestamp;
         private String largeImageKey;
         private String largeImageText;
+        private String largeImageUrl;
         private String smallImageKey;
         private String smallImageText;
+        private String smallImageUrl;
         private String partyId;
         private int partySize;
         private int partyMax;
@@ -253,10 +303,15 @@ public class RichPresence {
          * @return The RichPresence built.
          */
         public RichPresence build() {
-            return new RichPresence(activityType, state, details, startTimestamp, endTimestamp,
-                    largeImageKey, largeImageText, smallImageKey, smallImageText,
-                    partyId, partySize, partyMax, partyPrivacy, matchSecret, joinSecret,
-                    spectateSecret, buttons, instance);
+            return new RichPresence(activityType, statusDisplayType,
+                    state, stateUrl,
+                    details, detailsUrl,
+                    name, startTimestamp, endTimestamp,
+                    largeImageKey, largeImageText, largeImageUrl,
+                    smallImageKey, smallImageText, smallImageUrl,
+                    partyId, partySize, partyMax, partyPrivacy,
+                    matchSecret, joinSecret, spectateSecret,
+                    buttons, instance);
         }
 
         /**
@@ -267,6 +322,17 @@ public class RichPresence {
          */
         public Builder setActivityType(ActivityType activityType) {
             this.activityType = activityType;
+            return this;
+        }
+
+        /**
+         * Sets the status display type for the player's current activity
+         *
+         * @param statusDisplayType The new status display type
+         * @return This Builder.
+         */
+        public Builder setStatusDisplayType(StatusDisplayType statusDisplayType) {
+            this.statusDisplayType = statusDisplayType;
             return this;
         }
 
@@ -282,6 +348,17 @@ public class RichPresence {
         }
 
         /**
+         * Sets the state url of the user's current party
+         *
+         * @param stateUrl The state url of the user's current party.
+         * @return This Builder.
+         */
+        public Builder setStateUrl(String stateUrl) {
+            this.stateUrl = stateUrl;
+            return this;
+        }
+
+        /**
          * Sets details of what the player is currently doing.
          *
          * @param details The details of what the player is currently doing.
@@ -289,6 +366,28 @@ public class RichPresence {
          */
         public Builder setDetails(String details) {
             this.details = details;
+            return this;
+        }
+
+        /**
+         * Sets the details url of what the player is currently doing.
+         *
+         * @param detailsUrl The details url of what the player is currently doing
+         * @return This Builder.
+         */
+        public Builder setDetailsUrl(String detailsUrl) {
+            this.detailsUrl = detailsUrl;
+            return this;
+        }
+
+        /**
+         * Sets the player activity name.
+         *
+         * @param name The player activity name.
+         * @return This Builder.
+         */
+        public Builder setName(String name) {
+            this.name = name;
             return this;
         }
 
@@ -316,6 +415,25 @@ public class RichPresence {
 
         /**
          * Sets the key of the uploaded image for the large profile artwork, as well as
+         * the text tooltip shown when a cursor hovers over it, and the url when clicked.
+         *
+         * <p>These can be configured in the <a href="https://discord.com/developers/applications/me">applications</a>
+         * page on the discord website.
+         *
+         * @param largeImageKey  A key to an image to display.
+         * @param largeImageText Text displayed when a cursor hovers over the large image.
+         * @param largeImageUrl The Url to navigate to when clicking the large image.
+         * @return This Builder.
+         */
+        public Builder setLargeImage(String largeImageKey, String largeImageText, String largeImageUrl) {
+            this.largeImageKey = largeImageKey;
+            this.largeImageText = largeImageText;
+            this.largeImageUrl = largeImageUrl;
+            return this;
+        }
+
+        /**
+         * Sets the key of the uploaded image for the large profile artwork, as well as
          * the text tooltip shown when a cursor hovers over it.
          *
          * <p>These can be configured in the <a href="https://discord.com/developers/applications/me">applications</a>
@@ -325,10 +443,23 @@ public class RichPresence {
          * @param largeImageText Text displayed when a cursor hovers over the large image.
          * @return This Builder.
          */
-        public Builder setLargeImage(String largeImageKey, String largeImageText) {
-            this.largeImageKey = largeImageKey;
-            this.largeImageText = largeImageText;
-            return this;
+        public Builder setLargeImageWithTooltip(String largeImageKey, String largeImageText) {
+            return setLargeImage(largeImageKey, largeImageText, null);
+        }
+
+        /**
+         * Sets the key of the uploaded image for the large profile artwork, as well as
+         * the url to navigate to when clicked.
+         *
+         * <p>These can be configured in the <a href="https://discord.com/developers/applications/me">applications</a>
+         * page on the discord website.
+         *
+         * @param largeImageKey  A key to an image to display.
+         * @param largeImageUrl The Url to navigate to when clicking the large image.
+         * @return This Builder.
+         */
+        public Builder setLargeImageWithUrl(String largeImageKey, String largeImageUrl) {
+            return setLargeImage(largeImageKey, null, largeImageUrl);
         }
 
         /**
@@ -341,7 +472,26 @@ public class RichPresence {
          * @return This Builder.
          */
         public Builder setLargeImage(String largeImageKey) {
-            return setLargeImage(largeImageKey, null);
+            return setLargeImage(largeImageKey, null, null);
+        }
+
+        /**
+         * Sets the key of the uploaded image for the small profile artwork, as well as
+         * the text tooltip shown when a cursor hovers over it, and the url when clicked.
+         *
+         * <p>These can be configured in the <a href="https://discord.com/developers/applications/me">applications</a>
+         * page on the discord website.
+         *
+         * @param smallImageKey  A key to an image to display.
+         * @param smallImageText Text displayed when a cursor hovers over the small image.
+         * @param smallImageUrl The Url to navigate to when clicking the small image.
+         * @return This Builder.
+         */
+        public Builder setSmallImage(String smallImageKey, String smallImageText, String smallImageUrl) {
+            this.smallImageKey = smallImageKey;
+            this.smallImageText = smallImageText;
+            this.smallImageUrl = smallImageUrl;
+            return this;
         }
 
         /**
@@ -355,10 +505,23 @@ public class RichPresence {
          * @param smallImageText Text displayed when a cursor hovers over the small image.
          * @return This Builder.
          */
-        public Builder setSmallImage(String smallImageKey, String smallImageText) {
-            this.smallImageKey = smallImageKey;
-            this.smallImageText = smallImageText;
-            return this;
+        public Builder setSmallImageWithTooltip(String smallImageKey, String smallImageText) {
+            return setSmallImage(smallImageKey, smallImageText, null);
+        }
+
+        /**
+         * Sets the key of the uploaded image for the small profile artwork, as well as
+         * the url to navigate to when clicked.
+         *
+         * <p>These can be configured in the <a href="https://discord.com/developers/applications/me">applications</a>
+         * page on the discord website.
+         *
+         * @param smallImageKey  A key to an image to display.
+         * @param smallImageUrl The Url to navigate to when clicking the small image.
+         * @return This Builder.
+         */
+        public Builder setSmallImageWithUrl(String smallImageKey, String smallImageUrl) {
+            return setSmallImage(smallImageKey, null, smallImageUrl);
         }
 
         /**
@@ -371,7 +534,7 @@ public class RichPresence {
          * @return This Builder.
          */
         public Builder setSmallImage(String smallImageKey) {
-            return setSmallImage(smallImageKey, null);
+            return setSmallImage(smallImageKey, null, null);
         }
 
         /**
