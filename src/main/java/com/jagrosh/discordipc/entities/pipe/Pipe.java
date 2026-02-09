@@ -87,6 +87,15 @@ public abstract class Pipe {
 
                     final JsonObject parsedData = p.getJson();
                     final JsonObject data = parsedData.getAsJsonObject("data");
+
+                    if (data == null) {
+                        pipe.close();
+                        throw new IOException(
+                                "Discord IPC handshake returned null data for pipe " + i
+                                + " — the client may not be fully initialized. Retry after Discord is fully loaded."
+                        );
+                    }
+
                     final JsonObject userData = data.getAsJsonObject("user");
 
                     pipe.build = DiscordBuild.from(data

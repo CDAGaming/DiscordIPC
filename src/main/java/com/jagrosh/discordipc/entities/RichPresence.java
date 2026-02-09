@@ -167,8 +167,8 @@ public class RichPresence {
             secrets.addProperty("match", matchSecret);
         }
 
-        finalObject.addProperty("type", activityType.ordinal());
-        finalObject.addProperty("status_display_type", statusDisplayType.ordinal());
+        finalObject.addProperty("type", activityType != null ? activityType.ordinal() : ActivityType.Playing.ordinal());
+        finalObject.addProperty("status_display_type", statusDisplayType != null ? statusDisplayType.ordinal() : StatusDisplayType.Name.ordinal());
 
         if (state != null && !state.isEmpty()) {
             finalObject.addProperty("state", state);
@@ -303,7 +303,9 @@ public class RichPresence {
          * @return The RichPresence built.
          */
         public RichPresence build() {
-            return new RichPresence(activityType, statusDisplayType,
+            return new RichPresence(
+                    activityType != null ? activityType : ActivityType.Playing,
+                    statusDisplayType != null ? statusDisplayType : StatusDisplayType.Name,
                     state, stateUrl,
                     details, detailsUrl,
                     name, startTimestamp, endTimestamp,
