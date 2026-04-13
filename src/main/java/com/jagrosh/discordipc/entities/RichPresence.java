@@ -16,11 +16,11 @@
 
 package com.jagrosh.discordipc.entities;
 
+import java.util.Objects;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
-import java.util.Objects;
 
 /**
  * An encapsulation of all data needed to properly construct a JSON RichPresence payload.
@@ -601,6 +601,30 @@ public class RichPresence {
         public Builder setButtons(JsonArray buttons) {
             this.buttons = buttons;
             return this;
+        }
+
+        /**
+         * Sets the buttons to display on the Rich Presence.
+         * 
+         * @param buttons The buttons to display on the Rich Presence. (Max 2).
+         * 
+         * @return This Builder.
+         */
+        public Builder setButtons(final Button... buttons) {
+            /* If no buttons given then just return the builder. This allow to clear the list */
+            if(buttons == null) return this;
+
+            final JsonArray BUTTONS = new JsonArray();
+            for (Button button : buttons) {
+                final JsonObject BTN_OBJ = new JsonObject();
+                /* Add button to the object */
+                BTN_OBJ.addProperty("label", button.LABEL);
+                BTN_OBJ.addProperty("url", button.url);
+
+                /* Add the object to the list */
+                BUTTONS.add(BTN_OBJ);
+            }
+            return setButtons(BUTTONS);
         }
 
         /**
